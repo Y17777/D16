@@ -1,0 +1,20 @@
+{% extends 'default.html' %}
+
+{% block content %}
+
+{% if user == b_author or b_author is None %}
+<h1>{{ title }}</h1>
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-error">{{ form.non_fields_errors }}</div>
+    <div> {{ form.media }}</div>
+    {% for f in form %}
+    <p><label class="form-label" for="{{ f.id_for_label}}">{{ f.label }}</label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
+    <p><button type="submit">Сохранить</button></p>
+</form>
+{% else %}
+<h2>{{user}}, у вас нет доступа к редактированию этой записи!</h2>
+{% endif %}
+{% endblock %}

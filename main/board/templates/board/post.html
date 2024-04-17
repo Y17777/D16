@@ -1,0 +1,55 @@
+{% extends 'default.html' %}
+
+
+{% block content %}
+<h1>{{show_post.title}}</h1>
+{% if show_post.photo %}
+<p><img class="img-article-left" src="{{ show_post.photo.url }}"></p>
+<br>
+{% endif %}
+{{show_post.content|safe|linebreaks}}
+
+<br>
+<hr>
+<!--<h5>Оставить отклик</h5>-->
+<form action="{% url 'add_comment' post_id %}" method="post">
+    {% csrf_token %}
+<!--    {{ form }}-->
+        <div class="form-error"><label for="comment" class="form-label">
+                Ваш отклик:
+            </label>
+            <textarea class="form-control border" rows="2" cols="80" name="text"
+                      id="comment" required=""></textarea>
+        </div>
+        <button type="submit">Отправить</button>
+</form>
+<hr>
+    <h5>Отклики к статье:</h5>
+
+{% for comment in show_post.comment_set.all %}
+<ul class="list-articles">
+    <li>
+	<div class="article-panel">
+		<p class="first">Автор: {{ comment.commentAuthor.username|default:"Неизвестен" }}</p>
+		<p class="last">Дата: {{comment.dateCreation|date:"d-m-Y H:i:s"}}</p>
+
+	</div>
+<!--        {% autoescape off %}-->
+        {{comment.text}}
+<!--        {% endautoescape %}-->
+<!--			<div class="clear"></div>-->
+<!--			<p class="link-read-post"><a href="{{ comment.get_absolute_url }}">Подробнее</a></p>-->
+	</li>
+</ul>
+{% endfor %}
+{% endblock%}
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+{% extends 'default.html' %}
+
+{% block content %}
+<h5>Отклики к статье: {{comments.commentPost.title}}</h5>
+    <hr>
+{% if comments %}
+{% for comment in comments %}
+<ul class="list-articles">
+    <li>
+	<div class="article-panel">
+		<p class="first">Автор: {{ comment.commentAuthor.username }}</p>
+		<p class="last">Дата: {{comment.dateCreation|date:"d-m-Y H:i:s"}}</p>
+	</div>
+    </li>
+    <table>
+        <td width="83%">{{ comment.text }}</td>
+        {% if comment.accept_status == 0 %}
+        <td width="10%"><a href="{% url 'accept_comment' comment.pk %}">Принять</a></td>
+        {% endif %}
+        <td><a href="{% url 'delete_comment' comment.pk %}">Удалить</a></td>
+    </table>
+</ul>
+{% endfor %}
+{% else %}
+<h5>Откликов нет</h5>
+{% endif %}
+{% endblock%}

@@ -1,0 +1,60 @@
+{% extends 'default.html' %}
+
+{% block title %}
+
+{% endblock title %}
+
+{% block content %}
+<h1>Статьи пользователя {{user}}</h1>
+
+<ul class="list-articles">
+	{% for bullet in userPost %}
+	{% if bullet.author.id == user.id %}
+	<li>
+	<div class="article-panel">
+		<p class="first">Категория: {{bullet.cat.name}} | автор: {{ bullet.author.username|default:"Неизвестен" }}</p>
+		<p class="last">Дата: {{bullet.dateCreation|date:"d-m-Y H:i:s"}}</p>
+	</div>
+
+		<h4>{{bullet.title}}</h4>
+		<a href="{% url 'edit_page' bullet.id %}">Редактировать статью</a>
+		<br>
+		<a href="{% url 'delete_page' bullet.id %}">Удалить статью</a>
+		<br>
+		<a href="{% url 'post_comments' bullet.id %}">Отклики</a>
+
+	</li>
+	{% endif %}
+	{% endfor %}
+</ul>
+{% endblock %}
+
+{% block navigation %}
+{% if page_obj.has_other_pages %}
+<nav class="list-pages">
+	<ul>
+		{% if page_obj.has_previous %}
+		<li class="page-num">
+			<a href="?page={{ page_obj.previous_page_number }}">&lt</a>
+		</li>
+		{% endif %}
+
+		{% for p in paginator.page_range %}
+		{% if page_obj.number == p %}
+		<li class="page-num page-num-selected">{{ p }}</li>
+		{% elif p >= page_obj.number|add:-2 and p <= page_obj.number|add:2 %}
+		<li class="page-num">
+			<a href="?page={{ p }}">{{ p }}</a>
+		</li>
+		{% endif %}
+		{% endfor %}
+
+		{% if page_obj.has_next %}
+		<li class="page-num">
+			<a href="?page={{ page_obj.next_page_number }}">&gt</a>
+		</li>
+		{% endif %}
+	</ul>
+</nav>
+{% endif %}
+{% endblock %}
